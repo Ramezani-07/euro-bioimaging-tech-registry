@@ -1,0 +1,26 @@
+{
+  "name": "LSM 980 Airyscan Confocal",
+  "description": "Zeiss LSM 980 with Airyscan 2 multiplex detector enabling super-resolution confocal imaging at 1.7x improved lateral resolution over standard confocal. Equipped with 405, 445, 488, 514, 561, and 633 nm laser lines. Suitable for live-cell time-lapse, fixed multi-channel fluorescence, and co-localisation studies. Environmental chamber available for temperature and CO2 control.",
+  "technology_type": "light_microscopy",
+  "modality_label": "confocal microscopy",
+  "modality_iri": "http://purl.obolibrary.org/obo/FBbi_00000251",
+  "modality_term": {
+    "vocabulary": "FBbi",
+    "term_id": "FBbi:00000251",
+    "label": "confocal microscopy",
+    "iri": "http://purl.obolibrary.org/obo/FBbi_00000251"
+  },
+  "specimen_types": ["fixed_cells", "live_cells", "tissue_sections"],
+  "access_type": "fee_for_service",
+  "facility_name": "Finnish Advanced Microscopy Node (FAMN)",
+  "facility_country": "FI",
+  "contact_email": "microscopy@helsinki.fi",
+  "ontology_terms": [
+    {
+      "vocabulary": "EDAM",
+      "term_id": "operation_3552",
+      "label": "Microscopy image analysis",
+      "iri": "http://edamontology.org/operation_3552"
+    }
+  ]
+}

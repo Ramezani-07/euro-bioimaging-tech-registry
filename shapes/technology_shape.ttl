@@ -1,0 +1,133 @@
+# technology_shape.ttl — SHACL shapes for the Euro-BioImaging ImagingTechnology class.
+#
+# This file is the machine-readable contract for what constitutes a valid technology
+# record in the registry. pyshacl loads this graph and validates every submitted RDF
+# graph against it before the record is accepted into the database.
+#
+# In the panel: "The SHACL file makes our validation rules explicit and shareable —
+# any RDF-aware tool can validate a technology graph against these shapes, not just
+# our API. It separates the constraint logic from the application code."
+
+@prefix sh:       <http://www.w3.org/ns/shacl#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema:   <https://schema.org/> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix ebip:     <https://data.eurobioimaging.eu/ontology/> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ── Node shape: every ebip:ImagingTechnology resource must conform ───────────
+ebip:ImagingTechnologyShape
+    a sh:NodeShape ;
+    sh:targetClass ebip:ImagingTechnology ;
+    rdfs:label "ImagingTechnology SHACL shape" ;
+    rdfs:comment "Validates that each imaging technology record carries the minimum required fields with correct datatypes." ;
+
+    # ── schema:name — required, single string ────────────────────────────────
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:minLength 2 ;
+        sh:message "schema:name is required, must be a single xsd:string of at least 2 characters." ;
+    ] ;
+
+    # ── schema:description — required, non-empty string ──────────────────────
+    sh:property [
+        sh:path schema:description ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:minLength 10 ;
+        sh:message "schema:description is required and must be at least 10 characters." ;
+    ] ;
+
+    # ── ebip:facilityName — required, single string ──────────────────────────
+    sh:property [
+        sh:path ebip:facilityName ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "ebip:facilityName is required and must be an xsd:string." ;
+    ] ;
+
+    # ── ebip:facilityCountry — required, ISO 3166-1 alpha-2 code ─────────────
+    sh:property [
+        sh:path ebip:facilityCountry ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:maxLength 2 ;
+        sh:minLength 2 ;
+        sh:message "ebip:facilityCountry must be a 2-character ISO country code." ;
+    ] ;
+
+    # ── ebip:accessType — required, controlled vocabulary ───────────────────
+    # Values must come from the four recognised access models.
+    sh:property [
+        sh:path ebip:accessType ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in (
+            "open_access"^^xsd:string
+            "fee_for_service"^^xsd:string
+            "remote_access"^^xsd:string
+            "restricted"^^xsd:string
+        ) ;
+        sh:message "ebip:accessType must be one of: open_access, fee_for_service, remote_access, restricted." ;
+    ] ;
+
+    # ── ebip:technologyType — required, controlled vocabulary ────────────────
+    sh:property [
+        sh:path ebip:technologyType ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "ebip:technologyType is required." ;
+    ] ;
+
+    # ── ebip:specimenType — at least one specimen type required ──────────────
+    sh:property [
+        sh:path ebip:specimenType ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "At least one ebip:specimenType is required." ;
+    ] ;
+
+    # ── schema:contactPoint — required, must be a ContactPoint node ──────────
+    sh:property [
+        sh:path schema:contactPoint ;
+        sh:minCount 1 ;
+        sh:message "schema:contactPoint is required." ;
+        sh:node [
+            sh:property [
+                sh:path schema:email ;
+                sh:minCount 1 ;
+                sh:datatype xsd:string ;
+                # RFC 5322 simplified pattern — catches obvious non-email values
+                sh:pattern "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" ;
+                sh:message "schema:email must be a valid email address." ;
+            ] ;
+        ] ;
+    ] ;
+
+    # ── dcterms:subject — optional but must be a URI when present ───────────
+    # Used for FBbi modality links and additional ontology term references.
+    sh:property [
+        sh:path dcterms:subject ;
+        sh:nodeKind sh:IRI ;
+        sh:message "dcterms:subject values must be IRIs (ontology term references)." ;
+    ] ;
+
+    # ── ebip:llmContext — required, ensures the context was generated ────────
+    # Enforcement here guarantees that every record stored in the graph has a
+    # retrieval-ready natural-language summary for the Research Navigator.
+    sh:property [
+        sh:path ebip:llmContext ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:minLength 20 ;
+        sh:message "ebip:llmContext is required and must be a non-trivial string (>=20 chars)." ;
+    ] .
+

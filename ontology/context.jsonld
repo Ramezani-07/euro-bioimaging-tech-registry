@@ -1,0 +1,37 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://data.eurobioimaging.eu/ontology/",
+
+    "schema":   "https://schema.org/",
+    "dcterms":  "http://purl.org/dc/terms/",
+    "xsd":      "http://www.w3.org/2001/XMLSchema#",
+    "fbbi":     "http://purl.obolibrary.org/obo/",
+    "ebi":      "https://data.eurobioimaging.eu/technology/",
+    "ebip":     "https://data.eurobioimaging.eu/ontology/",
+
+    "name":             { "@id": "schema:name",        "@type": "xsd:string" },
+    "description":      { "@id": "schema:description", "@type": "xsd:string" },
+    "technology_type":  { "@id": "ebip:technologyType","@type": "xsd:string" },
+    "modality_label":   { "@id": "ebip:modalityLabel", "@type": "xsd:string" },
+    "modality_iri":     { "@id": "dcterms:subject",    "@type": "@id" },
+    "specimen_types":   { "@id": "ebip:specimenType",  "@container": "@set" },
+    "access_type":      { "@id": "ebip:accessType",    "@type": "xsd:string" },
+    "facility_name":    { "@id": "ebip:facilityName",  "@type": "xsd:string" },
+    "facility_country": { "@id": "ebip:facilityCountry","@type": "xsd:string" },
+    "contact_email":    { "@id": "schema:email",       "@type": "xsd:string" },
+    "ontology_terms":   { "@id": "dcterms:subject",    "@container": "@set" },
+    "llm_context":      { "@id": "ebip:llmContext",    "@type": "xsd:string" },
+    "submitted_at":     { "@id": "dcterms:created",    "@type": "xsd:dateTime" },
+
+    "OntologyTerm": {
+      "@id": "ebip:OntologyTerm",
+      "@context": {
+        "vocabulary": { "@id": "ebip:vocabulary",  "@type": "xsd:string" },
+        "term_id":    { "@id": "dcterms:identifier","@type": "xsd:string" },
+        "label":      { "@id": "schema:name",       "@type": "xsd:string" },
+        "iri":        { "@id": "schema:url",        "@type": "@id" }
+      }
+    }
+  }
+}
