@@ -78,21 +78,21 @@ def build_rdf_graph(record: dict) -> Graph:
         specimen_types = json.loads(specimen_types)
     for specimen in specimen_types:
         g.add((tech_uri, EBI_PROP.specimenType, Literal(specimen, datatype=XSD.string)))
-    '''''
-    # ── modality term ────────────────────────────────────────────────────────
-    modality_term = record.get("modality_term", [])
-    if isinstance(modality_term, str):
-        import json
-        modality_term = json.loads(modality_term)
-    for modality in modality_term:
-        g.add((tech_uri, EBI_PROP.modalityTerm, Literal(modality, datatype=XSD.string)))
-    '''''
     # ── Primary modality (FBbi link) ──────────────────────────────────────────
     if record.get("modality_iri"):
         modality_ref = URIRef(record["modality_iri"])
         g.add((tech_uri, DCTERMS.subject, modality_ref))
         if record.get("modality_label"):
             g.add((modality_ref, RDFS.label, Literal(record["modality_label"])))
+
+    # ── Auto-enrich from FBBI_TERMS if no modality_iri was provided ──────────
+    if not record.get("modality_iri"):
+        from app.vocabularies import FBBI_TERMS
+        term = FBBI_TERMS.get(record.get("technology_type", ""))
+        if term:
+            fbbi_uri = URIRef(term["iri"])
+            g.add((tech_uri, DCTERMS.subject, fbbi_uri))
+            g.add((fbbi_uri, RDFS.label, Literal(term["label"], datatype=XSD.string)))
 
     # ── Additional ontology terms ─────────────────────────────────────────────
     ontology_terms = record.get("ontology_terms", [])

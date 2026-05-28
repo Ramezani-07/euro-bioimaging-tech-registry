@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
 
 from app.database import (
@@ -200,14 +200,27 @@ async def list_technologies(
 
 @app.get(
     "/technologies/{record_id}",
-    response_model=TechnologyResponse,
     summary="Retrieve a single technology by UUID",
 )
-async def get_technology_endpoint(record_id: str):
+async def get_technology_endpoint(record_id: str, request: Request):
     record = get_technology(record_id)
     if not record:
         raise HTTPException(status_code=404, detail=f"Technology '{record_id}' not found")
     record["ttl_url"] = f"/technologies/{record_id}/ttl"
+
+    accept = request.headers.get("accept", "")
+    if "application/ld+json" in accept:
+        rdf_graph = build_rdf_graph(record)
+        # Embed the @context URL reference in the JSON-LD output
+        jsonld_str = rdf_graph.serialize(format="json-ld", indent=2)
+        import json as _json
+        jsonld_data = _json.loads(jsonld_str)
+        if isinstance(jsonld_data, list) and jsonld_data:
+            jsonld_data[0]["@context"] = "/context"
+        elif isinstance(jsonld_data, dict):
+            jsonld_data["@context"] = "/context"
+        return JSONResponse(content=jsonld_data, media_type="application/ld+json")
+
     return TechnologyResponse(**record)
 
 

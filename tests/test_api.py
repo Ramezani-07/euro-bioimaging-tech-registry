@@ -116,6 +116,38 @@ async def test_get_context(client):
     assert "@context" in data
 
 
+async def test_fbbi_auto_enrichment(client, sample_payload):
+    """POST without modality_term — Turtle must still contain a FBbi IRI."""
+    payload = sample_payload.copy()
+    payload.pop("modality_term", None)   # ensure no modality_term submitted
+    post = await client.post("/technologies", json=payload)
+    assert post.status_code == 201
+    tech_id = post.json()["id"]
+
+    ttl = await client.get(f"/technologies/{tech_id}/ttl")
+    assert ttl.status_code == 200
+    # The Turtle must reference the OBO PURL namespace
+    assert "FBbi_" in ttl.text
+
+
+async def test_get_technology_jsonld(client, sample_payload):
+    """GET with Accept: application/ld+json must return JSON-LD with @context."""
+    post = await client.post("/technologies", json=sample_payload)
+    assert post.status_code == 201
+    tech_id = post.json()["id"]
+
+    resp = await client.get(
+        f"/technologies/{tech_id}",
+        headers={"accept": "application/ld+json"}
+    )
+    assert resp.status_code == 200
+    assert "application/ld+json" in resp.headers["content-type"]
+    data = resp.json()
+    # JSON-LD from rdflib returns a list of nodes
+    node = data[0] if isinstance(data, list) else data
+    assert "@context" in node
+
+
 async def test_get_technology_not_found(client):
     resp = await client.get("/technologies/nonexistent-uuid-0000")
     assert resp.status_code == 404
