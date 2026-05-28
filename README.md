@@ -74,7 +74,7 @@ This field exists because the Research Navigator will use semantic similarity se
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/eurobioimaging-tech-registry.git
+git clone https://github.com/Ramezani-07/euro-bioimaging-tech-registry
 cd eurobioimaging-tech-registry
 
 # Build and start
