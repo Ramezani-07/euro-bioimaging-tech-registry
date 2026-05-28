@@ -212,7 +212,14 @@ async def get_technology_endpoint(record_id: str, request: Request):
     if "application/ld+json" in accept:
         rdf_graph = build_rdf_graph(record)
         # Embed the @context URL reference in the JSON-LD output
-        jsonld_str = rdf_graph.serialize(format="json-ld", indent=2)
+        with open(CONTEXT_PATH, "r", encoding="utf-8") as f:
+            context = json.load(f)
+
+        jsonld_str = rdf_graph.serialize(
+            format="json-ld",
+            indent=2,
+            context=context["@context"],  # applies compaction — prefixes on top
+        )
         import json as _json
         jsonld_data = _json.loads(jsonld_str)
         if isinstance(jsonld_data, list) and jsonld_data:

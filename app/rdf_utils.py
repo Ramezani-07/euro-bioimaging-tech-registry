@@ -111,6 +111,11 @@ def build_rdf_graph(record: dict) -> Graph:
     # directly in the graph for LLM-friendly SPARQL queries.
     g.add((tech_uri, EBI_PROP.llmContext, Literal(record["llm_context"], datatype=XSD.string)))
 
+    # ── Link to Turtle representation ─────────────────────────────────────────
+    ttl_uri = URIRef(f"https://data.eurobioimaging.eu/technology/{record['id']}.ttl")
+    g.add((tech_uri, RDFS.seeAlso, ttl_uri))
+    g.add((ttl_uri, RDFS.label, Literal("RDF/Turtle representation", datatype=XSD.string)))
+
     return g
 
 

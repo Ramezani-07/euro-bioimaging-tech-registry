@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - tech_data:/data
+    environment:
+      - DB_PATH=/data/technologies.db
+      - RDF_OUTPUT_DIR=/data/rdf
+    restart: unless-stopped
+
+volumes:
+  tech_data:
+    # Named volume persists data across `docker compose down`.
+    # Use `docker compose down -v` to remove the volume and all stored data.

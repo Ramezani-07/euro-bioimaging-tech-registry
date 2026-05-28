@@ -6,7 +6,6 @@ can discover the RDF representation of any record from the JSON response alone,
 which is the core Linked Data principle applied to a REST API.
 """
 from __future__ import annotations
-import uuid
 from datetime import datetime
 from typing import Optional, Annotated
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, HttpUrl, BeforeValidator
