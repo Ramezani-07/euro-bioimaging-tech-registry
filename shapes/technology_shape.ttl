@@ -1,13 +1,3 @@
-# technology_shape.ttl — SHACL shapes for the Euro-BioImaging ImagingTechnology class.
-#
-# This file is the machine-readable contract for what constitutes a valid technology
-# record in the registry. pyshacl loads this graph and validates every submitted RDF
-# graph against it before the record is accepted into the database.
-#
-# In the panel: "The SHACL file makes our validation rules explicit and shareable —
-# any RDF-aware tool can validate a technology graph against these shapes, not just
-# our API. It separates the constraint logic from the application code."
-
 @prefix sh:       <http://www.w3.org/ns/shacl#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 @prefix schema:   <https://schema.org/> .
