@@ -11,6 +11,8 @@ COPY app/ ./app/
 COPY shapes/ ./shapes/
 COPY ontology/ ./ontology/
 COPY tests/ ./tests/
+COPY pytest.ini .
+
 
 # Create data directories with open permissions (runs as root in demo context)
 RUN mkdir -p /data/rdf && chmod -R 777 /data
