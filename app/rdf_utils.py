@@ -1,13 +1,3 @@
-"""
-Namespace design: we mint a custom EBI namespace for Euro-BioImaging-specific
-properties (ebi:ImagingTechnology, ebi:facilityName, etc.) rather than overloading
-schema.org. dcterms:subject is used for ontology term links (modality IRI,
-additional terms) because it is the established Dublin Core property for
-'classification' and is well-understood by RDF consumers and SPARQL engines alike.
-SHACL validation runs against the loaded shapes graph before DB insertion so
-that any constraint violation is caught at the API layer, not discovered later
-during graph consumption.
-"""
 import os
 from pathlib import Path
 from rdflib import Graph, Literal, Namespace, URIRef
