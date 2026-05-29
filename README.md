@@ -75,7 +75,7 @@ This field exists because the Research Navigator will use semantic similarity se
 ```bash
 # Clone the repository
 git clone https://github.com/Ramezani-07/euro-bioimaging-tech-registry
-cd eurobioimaging-tech-registry
+cd euro-bioimaging-tech-registry
 
 # Build and start
 docker compose up --build
