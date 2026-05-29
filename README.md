@@ -96,10 +96,10 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Create data directories
-mkdir -p /data/rdf   # or set DB_PATH and RDF_OUTPUT_DIR to a local path
+# Create local data directories
+mkdir -p data/rdf
 
-# Set environment variables (adjust paths as needed)
+# Set environment variables
 export DB_PATH=./data/technologies.db
 export RDF_OUTPUT_DIR=./data/rdf
 
