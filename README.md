@@ -124,7 +124,20 @@ uvicorn app.main:app --reload --port 8000
 
 ### Content Negotiation
 
-The API supports content negotiation on GET /technologies/{id}: sending Accept: application/ld+json returns the same record serialised as a compacted JSON-LD document, with the @context block embedded at the top and field names mapped to their semantic IRIs. The raw context document is also available at GET /context as a standalone application/ld+json resource. This means every technology record is accessible both as plain JSON for REST clients and as a Linked Data document for semantic web tooling — without separate endpoints.
+`GET /technologies/{id}` supports content negotiation via the `Accept` header:
+
+| Accept Header | Response Format |
+|---|---|
+| `application/json` (default) | Standard JSON response |
+| `application/ld+json` | Compacted JSON-LD with `@context` embedded |
+
+```bash
+# JSON-LD representation
+curl -H "Accept: application/ld+json" \
+  http://localhost:8000/technologies/<id> | python3 -m json.tool
+```
+
+The raw `@context` document mapping all field names to semantic IRIs is available at `GET /context`.
 
 ### Submit a technology
 
